@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroDiagnóstico - Sistema de Avaliação Neurológica</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #9b59b6;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--primary);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            padding: 15px 25px;
+            border-left: 4px solid transparent;
+        }
+        
+        .nav-links li.active {
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .nav-links li:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h2 {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .icon-patient {
+            background: var(--secondary);
+        }
+        
+        .icon-test {
+            background: var(--accent);
+        }
+        
+        .icon-results {
+            background: var(--success);
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .card-desc {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        /* Patient Info */
+        .patient-info {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .patient-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .patient-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark);
+        }
+        
+        .patient-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .patient-details p {
+            color: #7f8c8d;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-weight: 600;
+        }
+        
+        /* Cognitive Tests */
+        .tests-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .test-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .test-card:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .test-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .test-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .status-completed {
+            background: #e8f6f3;
+            color: var(--success);
+        }
+        
+        .status-pending {
+            background: #fef9e7;
+            color: var(--warning);
+        }
+        
+        .test-score {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: right;
+            color: var(--dark);
+        }
+        
+        /* Results Visualization */
+        .results-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        /* Risk Assessment */
+        .risk-assessment {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        .risk-level {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .risk-indicator {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-right: 20px;
+        }
+        
+        .risk-low {
+            background: var(--success);
+        }
+        
+        .risk-medium {
+            background: var(--warning);
+        }
+        
+        .risk-high {
+            background: var(--danger);
+        }
+        
+        .risk-details h4 {
+            margin-bottom: 10px;
+        }
+        
+        .recommendations {
+            margin-top: 20px;
+        }
+        
+        .recommendations ul {
+            padding-left: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 10px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>NeuroDiagnóstico</h1>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+                <li><a href="#"><i class="fas fa-brain"></i> Avaliações</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Ajuda</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>Dashboard do Paciente</h2>
+                <div class="user-info">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Dr. Silva">
+                    <span>Dr. Silva</span>
+                </div>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Pacientes Ativos</div>
+                        <div class="card-icon icon-patient">
+                            <i class="fas fa-user-injured"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">42</div>
+                    <div class="card-desc">+5 este mês</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Testes Realizados</div>
+                        <div class="card-icon icon-test">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">128</div>
+                    <div class="card-desc">+12 esta semana</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Diagnósticos</div>
+                        <div class="card-icon icon-results">
+                            <i class="fas fa-diagnoses"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">24</div>
+                    <div class="card-desc">+3 novos casos</div>
+                </div>
+            </div>
+            
+            <!-- Patient Information -->
+            <div class="patient-info">
+                <div class="patient-header">
+                    <div class="patient-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="patient-details">
+                        <h3>Maria Oliveira, 72 anos</h3>
+                        <p>ID: #P-00482 | Última consulta: 15/03/2023</p>
+                    </div>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Data de Nascimento</div>
+                        <div class="info-value">15/08/1951</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Gênero</div>
+                        <div class="info-value">Feminino</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Contato</div>
+                        <div class="info-value">(11) 98765-4321</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Responsável</div>
+                        <div class="info-value">João Oliveira (filho)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Histórico Familiar</div>
+                        <div class="info-value">Mãe com DA</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Comorbidades</div>
+                        <div class="info-value">Hipertensão, Diabetes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cognitive Tests -->
+            <div class="tests-section">
+                <h3 class="section-title"><i class="fas fa-brain"></i> Avaliações Cognitivas</h3>
+                <div class="tests-grid">
+                    <div class="test-card">
+                        <div class="test-name">Mini-Mental (MMSE)</div>
+                        <div class="test-status status-completed">Concluído</div>
+                        <div class="test-score">24/30</div>
+                    </div>
+                    <div class="test-card">
+                        <div class="test-name">MoCA</div>
+                        <div class="test-status status-completed">Concluído</div>
+                        <div class="test-score">18/30</div>
+                    </div>
+                    <div class="test-card">
+                        <div class="test-name">CDR</div>
+                        <div class="test-status status-completed">Concluído</div>
+                        <div class="test-score">1.0</div>
+                    </div>
+                    <div class="test-card">
+                        <div class="test-name">Teste do Relógio</div>
+                        <div class="test-status status-pending">Pendente</div>
+                        <div class="test-score">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Visualization -->
+            <div class="results-section">
+                <h3 class="section-title"><i class="fas fa-chart-line"></i> Progressão Cognitiva</h3>
+                <div class="chart-container">
+                    <!-- Aqui iria um gráfico de progressão -->
+                    <div style="display: flex; align-items: flex-end; height: 100%; gap: 20px; padding: 20px;">
+                        <div style="background: var(--secondary); width: 40px; height: 60%; border-radius: 5px;"></div>
+                        <div style="background: var(--secondary); width: 40px; height: 70%; border-radius: 5px;"></div>
+                        <div style="background: var(--secondary); width: 40px; height: 50%; border-radius: 5px;"></div>
+                        <div style="background: var(--secondary); width: 40px; height: 40%; border-radius: 5px;"></div>
+                        <div style="background: var(--accent); width: 40px; height: 35%; border-radius: 5px;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Risk Assessment -->
+            <div class="risk-assessment">
+                <h3 class="section-title"><i class="fas fa-exclamation-triangle"></i> Avaliação de Risco</h3>
+                <div class="risk-level">
+                    <div class="risk-indicator risk-medium">
+                        Moderado
+                    </div>
+                    <div class="risk-details">
+                        <h4>Risco de Demência: Moderado</h4>
+                        <p>Paciente apresenta declínio cognitivo significativo com pontuações abaixo do esperado para idade e escolaridade.</p>
+                    </div>
+                </div>
+                
+                <div class="recommendations">
+                    <h4>Recomendações:</h4>
+                    <ul>
+                        <li>Realizar exames de neuroimagem (RM ou TC de crânio)</li>
+                        <li>Avaliação com geriatra para manejo de comorbidades</li>
+                        <li>Iniciar acompanhamento com terapia ocupacional</li>
+                        <li>Reavaliar em 6 meses com bateria completa de testes</li>
+                        <li>Orientar família sobre segurança e adaptações no ambiente doméstico</li>
+                    </ul>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Gerar Relatório</button>
+                    <button class="btn btn-outline">Agendar Retorno</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
